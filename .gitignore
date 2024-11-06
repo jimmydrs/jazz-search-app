@@ -1,4 +1,19 @@
+# Dependencies
 node_modules/
-.DS_Store
+
+# Environment
 .env
+.env.local
+.env.*.local
+
+# Config files with sensitive data
 public/config.js
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
