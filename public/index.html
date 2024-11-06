@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jazz Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Jazz Search</h1>
+        <button id="spotify-auth" class="auth-button">Login with Spotify</button>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search for jazz music...">
+            <button id="search-button">Search</button>
+        </div>
+
+        <div class="loader" style="display: none;"></div>
+
+        <div class="results-container">
+            <div class="spotify-results">
+                <h2>Spotify Results</h2>
+                <div id="spotify-results" class="tracks-grid"></div>
+            </div>
+
+            <div class="youtube-results">
+                <h2>YouTube Results</h2>
+                <div id="youtube-results" class="youtube-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="youtube.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
