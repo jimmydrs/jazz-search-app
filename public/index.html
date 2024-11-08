@@ -1,39 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jazz Search</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>Jazz Search</h1>
-        <button id="spotify-auth" class="auth-button">Login with Spotify</button>
-        
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search for jazz music...">
-            <button id="search-button">Search</button>
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <a href="/" class="home-link">
+                        <i class="fas fa-home"></i>
+                        <span>首頁</span>
+                    </a>
+                    <h1>Jazz Search</h1>
+                </div>
+                <div class="auth-container">
+                    <button id="spotify-login" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> 登入 Spotify
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 搜尋區塊 -->
+        <div class="search-section">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    class="search-input" 
+                    placeholder="搜尋爵士音樂..."
+                >
+                <button id="search-btn" class="search-button">搜尋</button>
+            </div>
         </div>
 
-        <div class="loader" style="display: none;"></div>
-
-        <div class="results-container">
-            <div class="spotify-results">
-                <h2>Spotify Results</h2>
-                <div id="spotify-results" class="tracks-grid"></div>
+        <!-- 搜尋結果區塊 -->
+        <div class="results-section">
+            <div id="spotify-results" class="spotify-section">
+                <!-- 搜尋結果將在這裡顯示 -->
             </div>
-
-            <div class="youtube-results">
-                <h2>YouTube Results</h2>
-                <div id="youtube-results" class="youtube-grid"></div>
+            
+            <div class="youtube-section">
+                <h2>YouTube 結果</h2>
+                <div id="youtube-results" class="videos-grid"></div>
             </div>
+        </div>
+
+        <!-- 播放清單區塊 -->
+        <div class="playlist-section">
+            <h2>播放清單</h2>
+            <div id="playlist" class="playlist-container"></div>
         </div>
     </div>
 
-    <script src="config.js"></script>
-    <script src="auth.js"></script>
-    <script src="youtube.js"></script>
-    <script src="app.js"></script>
+    <!-- 腳本引用 -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/playlist.js"></script>
+    <script src="js/playlist-utils.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // 統一的初始化函數
+        async function initializeApp() {
+            try {
+                // 等待設定檔載入
+                await window.configLoaded;
+                console.log('設定檔載入完成');
+
+                // 初始化 SpotifyAuth
+                window.spotifyAuth = new SpotifyAuth();
+                console.log('SpotifyAuth 初始化完成');
+
+                // 觸發 app 初始化事件
+                window.dispatchEvent(new Event('appReady'));
+            } catch (error) {
+                console.error('應用程式初始化失敗:', error);
+            }
+        }
+
+        // 當 DOM 載入完成後開始初始化
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+
+    <!-- 在 body 結尾前添加 -->
+    <div id="createPlaylistModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>建立新的播放清單</h2>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="playlistNameInput">播放清單名稱</label>
+                    <input type="text" 
+                           id="playlistNameInput" 
+                           placeholder="請輸入播放清單名稱"
+                           maxlength="50">
+                </div>
+                <div class="pending-track-info">
+                    <p>即將加入的歌曲：</p>
+                    <div id="pendingTrackDisplay"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="createPlaylistBtn" class="btn-primary">建立</button>
+                <button id="cancelCreatePlaylistBtn" class="btn-secondary">取消</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

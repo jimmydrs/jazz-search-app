@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>認證處理中...</title>
+    <script src="js/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 從 URL 獲取授權碼
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
+
+            if (error) {
+                console.error('Spotify 授權錯誤:', error);
+                window.location.href = '/?error=' + encodeURIComponent(error);
+                return;
+            }
+
+            if (code) {
+                // 發送授權碼到後端
+                fetch('/api/auth/spotify/callback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 儲存 token
+                        localStorage.setItem('spotify_access_token', data.access_token);
+                        localStorage.setItem('spotify_refresh_token', data.refresh_token);
+                        window.location.href = '/';
+                    } else {
+                        throw new Error(data.message || '認證失敗');
+                    }
+                })
+                .catch(error => {
+                    console.error('處理認證時發生錯誤:', error);
+                    if (error.message !== 'success') {
+                        window.location.href = '/?error=' + encodeURIComponent('認證處理失敗');
+                    } else {
+                        window.location.href = '/';
+                    }
+                });
+            } else {
+                window.location.href = '/?error=' + encodeURIComponent('未收到授權碼');
+            }
+        });
+    </script>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px;">
+        <h2>處理認證中...</h2>
+        <p>請稍候，正在處理您的 Spotify 登入...</p>
+    </div>
+</body>
+</html>

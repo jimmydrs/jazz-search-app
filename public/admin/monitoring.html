@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>系統監控</title>
+    <link rel="stylesheet" href="css/monitoring.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- 添加導航欄 -->
+    <nav class="admin-nav">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">
+                <i class="fas fa-home"></i>
+                首頁
+            </a>
+            <div class="nav-links">
+                <a href="/admin" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    監控面板
+                </a>
+                <a href="/admin/feedback" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    使用者回饋
+                </a>
+                <a href="/admin/logs" class="nav-link">
+                    <i class="fas fa-list"></i>
+                    系統日誌
+                </a>
+            </div>
+            <div class="nav-user">
+                <span id="adminName">管理員</span>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    登出
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 原有的面板內容 -->
+    <div class="dashboard">
+        <div class="card" id="overview">
+            <h2>系統概覽</h2>
+            <div id="overviewData">載入中...</div>
+        </div>
+        <div class="card" id="errors">
+            <h2>錯誤統計</h2>
+            <div id="errorData">載入中...</div>
+        </div>
+        <div class="card" id="api">
+            <h2>API 效能</h2>
+            <div id="apiData">載入中...</div>
+        </div>
+        <div class="card" id="searches">
+            <h2>最近搜尋</h2>
+            <div id="searchData">載入中...</div>
+        </div>
+    </div>
+    
+    <!-- 先載入認證檢查 -->
+    <script src="js/auth-admin.js"></script>
+    <!-- 再載入監控功能 -->
+    <script src="js/monitoring.js"></script>
+</body>
+</html>

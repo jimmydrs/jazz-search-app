@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>回饋管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .feedback-list {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        .feedback-item {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .feedback-time {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .feedback-content {
+            margin: 0.5rem 0;
+            white-space: pre-wrap;
+        }
+        .feedback-meta {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #eee;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-list" id="feedbackList">
+        載入中...
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/batch.js"></script>
+    <script src="js/batchProcess.js"></script>
+
+    <script>
+        async function loadFeedback() {
+            try {
+                const response = await fetch('/api/admin/feedback');
+                if (!response.ok) throw new Error('載入失敗');
+                
+                const feedbacks = await response.json();
+                const listElement = document.getElementById('feedbackList');
+                
+                if (feedbacks.length === 0) {
+                    listElement.innerHTML = '<p style="text-align: center;">目前沒有回饋</p>';
+                    return;
+                }
+
+                listElement.innerHTML = feedbacks.reverse().map(feedback => `
+                    <div class="feedback-item">
+                        <div class="feedback-time">
+                            ${new Date(feedback.timestamp).toLocaleString('zh-TW')}
+                        </div>
+                        <div class="feedback-content">
+                            ${feedback.content}
+                        </div>
+                        <div class="feedback-meta">
+                            IP: ${feedback.ip || '未知'}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+                document.getElementById('feedbackList').innerHTML = 
+                    '<p class="error-message">載入回饋時發生錯誤</p>';
+            }
+        }
+
+        // 載入回饋
+        loadFeedback();
+
+        // 每分鐘重新載入一次
+        setInterval(loadFeedback, 60000);
+    </script>
+</body>
+</html>
